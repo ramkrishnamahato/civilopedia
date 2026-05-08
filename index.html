@@ -566,15 +566,15 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:.5rem;">
                   <label class="calc-label" style="margin-bottom:0;">Dry Season Energy Partition</label>
-                  <span id="ppa-dry-val" style="font-size:0.75rem; font-weight:700; color:var(--teal)">33.86%</span>
+                  <span id="ppa-dry-val" style="font-size:0.75rem; font-weight:700; color:var(--teal)">30%</span>
                 </div>
-                <input type="range" id="ppa-dry-percent" class="calc-range" min="0" max="100" value="33.86" step="0.01" oninput="updatePPACalculator()">
+                <input type="range" id="ppa-dry-percent" class="calc-range" min="0" max="100" value="30" step="0.01" oninput="updatePPACalculator()">
               </div>
 
               <!-- Added inputs for full parameterization based on PPA Document -->
               <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; border-top:1px solid var(--border); padding-top:1.25rem; margin-top:1.25rem;">
-                  <div><label class="calc-label" title="Gross Head in meters">Gross Head (m)</label><input type="number" id="ppa-head" class="calc-input" value="176.25" oninput="recalcTech()"></div>
-                  <div><label class="calc-label" title="Design discharge in m³/s">Discharge (m³/s)</label><input type="number" id="ppa-flow" class="calc-input" value="7.00" oninput="recalcTech()"></div>
+                  <div><label class="calc-label" title="Gross Head in meters">Gross Head (m)</label><input type="number" id="ppa-head" class="calc-input" value="170" oninput="recalcTech()"></div>
+                  <div><label class="calc-label" title="Design discharge in m³/s">Discharge (m³/s)</label><input type="number" id="ppa-flow" class="calc-input" value="5.00" oninput="recalcTech()"></div>
                   <div><label class="calc-label" title="Turbine * Generator * Transformer efficiency">Combined Eff. (%)</label><input type="number" id="ppa-eff" class="calc-input" value="85.54" oninput="recalcTech()" step="0.01"></div>
                   <div><label class="calc-label" title="Percentage of energy lost due to outage & self-consumption">Outage/Loss (%)</label><input type="number" id="ppa-loss" class="calc-input" value="4.0" oninput="updatePPACalculator()"></div>
                   <div><label class="calc-label" title="Months of delay from RCOD. Reduces maximum escalations per Clause 12.1">COD Delay (M)</label><input type="number" id="ppa-cod-delay" class="calc-input" value="0" oninput="updatePPACalculator()"></div>
@@ -583,7 +583,7 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
               </div>
               
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; border-top:1px solid var(--border); padding-top:1.25rem;">
-                <div style="grid-column: span 2"><label class="calc-label">Total Project Cost (Rs. Cr)</label><input type="number" id="ppa-cost" class="calc-input" value="201.61" oninput="updatePPACalculator()"></div>
+                <div style="grid-column: span 2"><label class="calc-label">Total Project Cost (Rs. Cr)</label><input type="number" id="ppa-cost" class="calc-input" value="200" oninput="updatePPACalculator()"></div>
                 <div><label class="calc-label">Lifespan (Yrs)</label><input type="number" id="ppa-life" class="calc-input" value="30" oninput="updatePPACalculator()"></div>
                 <div><label class="calc-label">Loan Term (Yrs)</label><input type="number" id="ppa-loan" class="calc-input" value="12" oninput="updatePPACalculator()"></div>
                 <div><label class="calc-label">Debt (%)</label><input type="number" id="ppa-debt" class="calc-input" value="70" oninput="updatePPACalculator()"></div>
