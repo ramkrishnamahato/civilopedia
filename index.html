@@ -517,8 +517,8 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
     </div>
 
     <!-- PPA PANEL -->
-    <div class="panel" id="panel-ppa">
-      <div class="ph"><div class="ph-tag">NEA Power Purchase Agreement</div><h2>PPA Rates &amp; Revenue Projection Module <span class="source-badge badge-nea">NEA</span><span class="source-badge badge-erc" style="margin-left:.4rem">2074/01/14</span></h2><p>Official ROR, PROR, and Storage power purchase rates based on NEA Board Decisions effective 2074/01/14 (April 27, 2017). Includes an interactive lifecycle and financial calculator utilizing 3% simple escalation.</p></div>
+        <div class="panel" id="panel-ppa">
+      <div class="ph"><div class="ph-tag">NEA Power Purchase Agreement</div><h2>PPA Rates &amp; Revenue Projection Module <span class="source-badge badge-nea">NEA</span><span class="source-badge badge-erc" style="margin-left:.4rem">2074/01/14</span></h2><p>Official ROR, PROR, and Storage power purchase rates based on NEA Board Decisions effective 2074/01/14. Includes an interactive lifecycle and financial calculator utilizing 3% simple escalation.</p></div>
       <div class="pb">
         <div class="update-pill">NEA Board Decision — Effective 2074/01/14</div>
         <div class="ppa-new-banner">
@@ -526,12 +526,11 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
           <div class="text"><strong>NEA Board PPA Rules (2074/01/14):</strong> Rated capacity of hydropower projects to be eligible for local currency PPA = <strong>any capacity</strong>. Rated capacity eligible for foreign currency PPA = <strong>above 100 MW</strong>. Base rate to be lowered for projects >100MW with ROE higher than 17%.</div>
         </div>
 
-        <!-- PPA CALCULATOR INTEGRATION -->
+        <!-- PPA CALCULATOR -->
         <div class="r-section">
           <div class="r-sec-tag">Interactive Module</div>
           <h2 class="r-sec-title">PPA Revenue &amp; Financial Projections</h2>
           <div class="calc-card calc-grid-2">
-            <!-- Left Side: Inputs -->
             <div style="display:flex; flex-direction:column; gap:1.5rem;">
               <div>
                 <label class="calc-label">Project Type Selection</label>
@@ -566,24 +565,36 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
               <div>
                 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:.5rem;">
                   <label class="calc-label" style="margin-bottom:0;">Dry Season Energy Partition</label>
-                  <span id="ppa-dry-val" style="font-size:0.75rem; font-weight:700; color:var(--teal)">30%</span>
+                  <div style="display:flex; align-items:center; gap:0.3rem;">
+                    <input type="number" id="ppa-dry-percent-input" class="calc-input" value="33.86" step="0.01" style="width:70px; padding:0.2rem 0.5rem; text-align:right; font-size:0.8rem; height:auto; color:var(--teal); font-weight:700;" oninput="document.getElementById('ppa-dry-percent').value=this.value; updatePPACalculator()">
+                    <span style="font-size:0.75rem; font-weight:700; color:var(--teal)">%</span>
+                  </div>
                 </div>
-                <input type="range" id="ppa-dry-percent" class="calc-range" min="0" max="100" value="30" step="0.01" oninput="updatePPACalculator()">
+                <input type="range" id="ppa-dry-percent" class="calc-range" min="0" max="100" value="33.86" step="0.01" oninput="document.getElementById('ppa-dry-percent-input').value=this.value; updatePPACalculator()">
               </div>
 
-              <!-- Added inputs for full parameterization based on PPA Document -->
+              <!-- Extra inputs for parameterization based on PPA Document -->
               <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; border-top:1px solid var(--border); padding-top:1.25rem; margin-top:1.25rem;">
-                  <div><label class="calc-label" title="Gross Head in meters">Gross Head (m)</label><input type="number" id="ppa-head" class="calc-input" value="170" oninput="recalcTech()"></div>
-                  <div><label class="calc-label" title="Design discharge in m³/s">Discharge (m³/s)</label><input type="number" id="ppa-flow" class="calc-input" value="5.00" oninput="recalcTech()"></div>
+                  <div><label class="calc-label" title="Gross Head in meters">Gross Head (m)</label><input type="number" id="ppa-head" class="calc-input" value="176.25" oninput="recalcTech()"></div>
+                  <div><label class="calc-label" title="Design discharge in m³/s">Discharge (m³/s)</label><input type="number" id="ppa-flow" class="calc-input" value="7.00" oninput="recalcTech()"></div>
                   <div><label class="calc-label" title="Turbine * Generator * Transformer efficiency">Combined Eff. (%)</label><input type="number" id="ppa-eff" class="calc-input" value="85.54" oninput="recalcTech()" step="0.01"></div>
+                  
                   <div><label class="calc-label" title="Percentage of energy lost due to outage & self-consumption">Outage/Loss (%)</label><input type="number" id="ppa-loss" class="calc-input" value="4.0" oninput="updatePPACalculator()"></div>
                   <div><label class="calc-label" title="Months of delay from RCOD. Reduces maximum escalations per Clause 12.1">COD Delay (M)</label><input type="number" id="ppa-cod-delay" class="calc-input" value="0" oninput="updatePPACalculator()"></div>
-                  <div><label class="calc-label" title="NEA Outage Hours for Compensation per Schedule 3">NEA Outage (Hr)</label><input type="number" id="ppa-nea-outage" class="calc-input" value="0" oninput="updatePPACalculator()"></div>
-                  <div style="grid-column: span 3;"><label class="calc-label" title="Percentage of energy shortfall relative to Available Declaration per Clause 10.1">Deviation Penalty Shortfall (%)</label><input type="number" id="ppa-deviation" class="calc-input" value="0" oninput="updatePPACalculator()" step="0.1"></div>
+                  <div><label class="calc-label" title="Percentage of energy shortfall relative to Available Declaration per Clause 10.1">Dev. Penalty (%)</label><input type="number" id="ppa-deviation" class="calc-input" value="0" oninput="updatePPACalculator()" step="0.1"></div>
+                  
+                  <div style="grid-column: span 2;">
+                      <label class="calc-label" title="Compensation Case">Compensation Case</label>
+                      <select id="ppa-comp-case" class="calc-input" onchange="updatePPACalculator()" style="cursor:pointer; padding:0.65rem 0.4rem; font-size:0.8rem">
+                          <option value="case1">Case I: Forced Outage of NEA Line(s)</option>
+                          <option value="case2">Case II: NEA Dispatch Instructions</option>
+                      </select>
+                  </div>
+                  <div><label class="calc-label" title="Undelivered Energy (GWh) due to NEA Outage/Instruction">Undelivered (GWh)</label><input type="number" id="ppa-undelivered" class="calc-input" value="0" step="0.01" oninput="updatePPACalculator()"></div>
               </div>
               
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; border-top:1px solid var(--border); padding-top:1.25rem;">
-                <div style="grid-column: span 2"><label class="calc-label">Total Project Cost (Rs. Cr)</label><input type="number" id="ppa-cost" class="calc-input" value="200" oninput="updatePPACalculator()"></div>
+                <div style="grid-column: span 2"><label class="calc-label">Total Project Cost (Rs. Cr)</label><input type="number" id="ppa-cost" class="calc-input" value="201.61" oninput="updatePPACalculator()"></div>
                 <div><label class="calc-label">Lifespan (Yrs)</label><input type="number" id="ppa-life" class="calc-input" value="30" oninput="updatePPACalculator()"></div>
                 <div><label class="calc-label">Loan Term (Yrs)</label><input type="number" id="ppa-loan" class="calc-input" value="12" oninput="updatePPACalculator()"></div>
                 <div><label class="calc-label">Debt (%)</label><input type="number" id="ppa-debt" class="calc-input" value="70" oninput="updatePPACalculator()"></div>
@@ -604,27 +615,17 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
               </div>
             </div>
 
-            <!-- Right Side: Output Dashboard -->
+            <!-- Right Side Dashboard -->
             <div style="background:var(--surface2); padding:1.75rem; border-radius:4px; display:flex; flex-direction:column; gap:1.25rem; border:1px solid var(--border);">
-               
                <div id="ppa-warning-text" style="display:none; background:rgba(192,57,43,0.1); color:var(--red); padding:0.8rem; border-radius:4px; font-size:0.75rem; font-family:'DM Mono',monospace; line-height:1.4; border:1px solid rgba(192,57,43,0.2);"></div>
-
                <div>
                   <div class="calc-res-label">Est. Annual Revenue (Selected Year)</div>
                   <div class="calc-res-val" id="ppa-res-annual">NPR 0.00 Cr</div>
                </div>
-               
                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; border-top:1px solid rgba(0,0,0,0.05); padding-top:1rem;">
-                  <div>
-                     <div class="calc-res-label">DSCR</div>
-                     <div class="calc-res-val" id="ppa-res-dscr" style="font-size:1.8rem">0.00</div>
-                  </div>
-                  <div>
-                     <div class="calc-res-label">Free Cash Flow</div>
-                     <div class="calc-res-val" id="ppa-res-fcf" style="font-size:1.8rem; color:var(--text)">Rs. 0.00 Cr</div>
-                  </div>
+                  <div><div class="calc-res-label">DSCR</div><div class="calc-res-val" id="ppa-res-dscr" style="font-size:1.8rem">0.00</div></div>
+                  <div><div class="calc-res-label">Free Cash Flow</div><div class="calc-res-val" id="ppa-res-fcf" style="font-size:1.8rem; color:var(--text)">Rs. 0.00 Cr</div></div>
                </div>
-
                <div style="background:var(--bg); border:1px solid var(--border); padding:1rem; border-radius:4px;">
                   <div style="display:flex; justify-content:space-between; margin-bottom:.75rem;">
                      <span class="calc-res-label">GoN Royalty Breakdown</span>
@@ -634,16 +635,11 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
                   <div style="display:flex; justify-content:space-between; font-size:.8rem; margin-bottom:.6rem;"><span style="color:var(--muted)">Energy Royalty</span><strong id="ppa-res-royalty-eng" style="color:var(--text)">0</strong></div>
                   <div style="display:flex; justify-content:space-between; font-size:.85rem; border-top:1px dashed var(--border); padding-top:.6rem;"><strong style="color:var(--teal)">Total Est. Royalty</strong><strong id="ppa-res-royalty-tot" style="color:var(--teal)">0</strong></div>
                </div>
-
-               <div style="font-size:.7rem; font-family:'DM Mono',monospace; color:var(--muted); text-transform:uppercase;">
-                  OPEX Estimated: <strong id="ppa-res-opex" style="color:var(--text)">0</strong>
-               </div>
-
+               <div style="font-size:.7rem; font-family:'DM Mono',monospace; color:var(--muted); text-transform:uppercase;">OPEX Estimated: <strong id="ppa-res-opex" style="color:var(--text)">0</strong></div>
                <div style="border-top:1px solid rgba(0,0,0,0.05); padding-top:1.25rem;">
                   <div class="calc-res-label">Est. Lifecycle Revenue (All Years)</div>
                   <div class="calc-res-val" id="ppa-res-lc" style="font-size:1.6rem; color:var(--text); opacity:0.8;">NPR 0.00 Cr</div>
                </div>
-
                <div style="display:grid; grid-template-columns:1fr; gap:0.75rem; border-top:1px solid rgba(0,0,0,0.05); padding-top:1.25rem;">
                   <div style="display:flex; justify-content:space-between; align-items:center;">
                      <div><div class="calc-res-label">Dry Revenue Component</div><div style="font-size:1.1rem; font-weight:700; color:var(--teal);" id="ppa-res-dry-rev">0</div></div>
@@ -668,7 +664,6 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
           <p class="r-intro">Verified provisions from standard Nepal Electricity Authority (NEA) Power Purchase Agreements (PPA). Preserved in both English translation and original Nepali text.</p>
           
           <div class="env-cards" style="grid-template-columns: 1fr; gap: 2rem;">
-             <!-- Clause 12 -->
              <div class="env-card">
                <h4>📑 Clause 12: Electricity Purchase Rate (विद्युत खरिद मूल्यदर)</h4>
                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
@@ -705,7 +700,6 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
                </div>
              </div>
 
-             <!-- Clause 10 -->
              <div class="env-card">
                <h4>⚠️ Clause 10: Deviation Penalty & Compensation (पूर्वानूमान विचलन शुल्क र क्षतिपूर्ति)</h4>
                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
@@ -724,7 +718,6 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
                </div>
              </div>
 
-             <!-- Article 1: Key Definitions -->
              <div class="env-card">
                <h4>📖 Article 1: Key Technical Definitions (प्राविधिक परिभाषाहरु)</h4>
                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
@@ -749,35 +742,41 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
                </div>
              </div>
 
-             <!-- Schedule 2 & 3 -->
-             <div class="env-card">
-               <h4>💰 Schedule 2 & 3: Contract Energy Allocation & Compensation Formula</h4>
+             <div class="env-card" style="grid-column: span 1;">
+               <h4>🗓️ Schedule 2: Contract Energy</h4>
+               <div style="background:var(--surface2); padding:1.25rem; border-radius:4px; margin-top:1rem;">
+                 <p style="font-size:0.85rem; line-height:1.7; color:var(--light);">
+                   Contract Energy is declared via the Availability Declaration. For ROR projects, the minimum dry season energy must be 30% to avoid financial penalties. The table defines the monthly dispatched energy (kWh) distributed across Dry (Mangsir 16 to Jestha 15) and Wet (Jestha 16 to Mangsir 15) seasons.
+                 </p>
+               </div>
+             </div>
+
+             <div class="env-card" style="grid-column: span 1;">
+               <h4>💰 Schedule 3: Compensation Formula (Case I & Case II)</h4>
                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
-                 <div style="background:var(--surface2); padding:1.25rem; border-radius:4px;">
-                   <strong style="color:var(--gold); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">Nepali (Context)</strong>
-                   <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7;">
-                     <strong>अनुसूची २: कन्ट्रयाक्ट इनर्जी (Contract Energy)</strong><br>
-                     अनुसूची २ मा आयोजनाको मासिक कन्ट्रयाक्ट इनर्जी र उपलब्ध क्षमता उल्लेख हुन्छ। आरओआर (ROR) आयोजनाको हकमा सुख्खायामको उर्जा कुल वार्षिक उर्जाको कम्तीमा ३०% हुनुपर्दछ, अन्यथा पेनाल्टी लाग्नेछ।<br><br>
-                     <strong>अनुसूची ३: क्षतिपूर्ति रकम (Compensation)</strong><br>
-                     दफा १०.१ को लागि क्षतिपूर्ति रकम निर्धारण गर्ने सुत्र:<br>
-                     <strong>क्षतिपूर्ति रकम (रु.) = उपलब्ध हुन नसकेको उर्जा (Undelivered Energy) × खरिद दर (Purchase Price)</strong><br>
-                     प्राधिकरणको कारणले लाइन काटिएमा वा Dispatch Instruction अनुसार कम उत्पादन गर्नुपरेमा यो सुत्र लागू हुनेछ।
+                 <div style="background:rgba(56,178,172,0.05); border:1px solid rgba(56,178,172,0.2); padding:1.25rem; border-radius:4px;">
+                   <strong style="color:var(--teal); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">Case I: Forced Outage of NEA Line(s)</strong>
+                   <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7; color:var(--light);">
+                     Applies when grid faults prevent the Project from generating/delivering according to Available Capacity.<br><br>
+                     <strong>UE = ∑ (UC_i × PT_i)</strong><br><br>
+                     <strong>UC_i</strong> (Undelivered Capacity) = Available Capacity - Capacity Delivered (0 if negative).<br>
+                     <strong>PT_i</strong> (Prorated Time) = [UC_i / Monthly Capacity]* × Forced Outage Hours.<br><br>
+                     <em>*Applicable only to the extent that (Metered Energy + UE) is equal to or less than 80% of the smaller of Contract Energy and Availability Declaration for the Month.</em>
                    </p>
                  </div>
-                 <div style="background:rgba(56,178,172,0.05); border:1px solid rgba(56,178,172,0.2); padding:1.25rem; border-radius:4px;">
-                   <strong style="color:var(--teal); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">English (Original)</strong>
+                 <div style="background:rgba(200,169,110,0.05); border:1px solid rgba(200,169,110,0.2); padding:1.25rem; border-radius:4px;">
+                   <strong style="color:var(--gold); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">Case II: NEA Dispatch Instructions</strong>
                    <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7; color:var(--light);">
-                     <strong>Schedule 2: Contract Energy</strong><br>
-                     Contract Energy is declared via the Availability Declaration. For ROR projects, the minimum dry season energy must be 30% to avoid financial penalties. The table defines the monthly dispatched energy (kWh) distributed across Dry (Mangsir 16 to Jestha 15) and Wet (Jestha 16 to Mangsir 15) seasons.<br><br>
-                     <strong>Schedule 3: Compensation Formula</strong><br>
-                     Formula for Compensation Amount pursuant to Article 10.1:<br>
-                     <strong>Compensation Amount (Rs.) = Undelivered Energy × Purchase Price</strong><br>
-                     Applicable for cases of Forced Outage of NEA line(s) which prevent the Project from generating, or when NEA issues Dispatch Instructions to generate less than Available Capacity.
+                     Applies when NEA instructs the Project to generate less than the Available Capacity.<br><br>
+                     <strong>UE = ∑ (UC_i × PT_i)</strong><br><br>
+                     <strong>UC_i</strong> = Available Capacity - (the greater of Capacity Dispatched and Capacity Delivered).<br>
+                     <strong>PT_i</strong> = [UC_i / Monthly Capacity]* × Nondispatched Hours.<br><br>
+                     <strong style="color:var(--red);">Zero Compensation Exceptions:</strong><br>
+                     Compensation = 0 if cumulative PT ≤ <strong>72 hours</strong> in the Fiscal Year, OR if dispatched & delivered energy ≥ 100% of the smaller of Contract Energy and Availability Declaration.
                    </p>
                  </div>
                </div>
              </div>
-
           </div>
         </div>
 
@@ -801,28 +800,311 @@ html.dark #admin-sync-bar{background:rgba(200,169,110,.08);border-bottom:1px sol
           <tr><td style="border-right:1px solid var(--border)">Non-peak hours</td><td>All other hours</td><td class="rate">8.40</td></tr>
           <tr><td style="border-right:1px solid var(--border)">Wet<br><span style="font-size:0.7rem; color:var(--muted)">(Jestha 16 - Mangsir 15)</span></td><td style="border-right:1px solid var(--border)">All hours</td><td>-</td><td class="rate">4.80</td><td>-</td></tr>
         </table></div>
-        <div class="table-note"><strong>Note:</strong> Posted rate with 3% simple escalations for 8 years. PROR project must be capable of providing daily peaking power at rated capacity for minimum 1 hour to 6 hours at one time.</div>
 
-        <h3 style="font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;font-family:'DM Mono',monospace">STORAGE / RESERVOIR PROJECT RATES</h3>
+        <h3 style="font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;font-family:'DM Mono',monospace">STORAGE PROJECT RATES</h3>
         <div class="tscroll"><table>
           <tr><th>Season</th><th>Period</th><th>Rate (Rs./kWh)</th><th>Min. Dry Energy</th></tr>
           <tr><td>Dry</td><td>Mangsir 16 – Jestha 15</td><td class="rate-hi">12.40</td><td>35%</td></tr>
           <tr><td>Wet</td><td>Jestha 16 – Mangsir 15</td><td class="rate">7.10*</td><td>-</td></tr>
         </table></div>
-        <div class="table-note" style="margin-bottom:1rem;"><strong>*Note:</strong> If wet season energy is more than 50%, this rate shall be decreased by the excess %.</div>
-        <div class="table-note"><strong>Storage Rules:</strong> 3% simple escalations for 8 years. If dry season energy is less than 35% of annual energy, a storage project shall be considered as a PROR project. Flat power purchase rate (example: Dry energy % * 12.40 + Wet energy % * 7.10) shall be applicable for multipurpose storage projects with less than 50% wet season energy.</div>
+        <div class="table-note"><strong>Storage Rules:</strong> 3% simple escalations for 8 years. If dry season energy is less than 35% of annual energy, treated as PROR.</div>
+      </div>
+      <div class="panel-footer"><span>Source: NEA Board Decisions 2074/01/14</span><a href="https://nea.org.np" target="_blank">nea.org.np ↗</a></div>
+    </div>    <div class="panel" id="panel-ppa">
+      <div class="ph"><div class="ph-tag">NEA Power Purchase Agreement</div><h2>PPA Rates &amp; Revenue Projection Module <span class="source-badge badge-nea">NEA</span><span class="source-badge badge-erc" style="margin-left:.4rem">2074/01/14</span></h2><p>Official ROR, PROR, and Storage power purchase rates based on NEA Board Decisions effective 2074/01/14. Includes an interactive lifecycle and financial calculator utilizing 3% simple escalation.</p></div>
+      <div class="pb">
+        <div class="update-pill">NEA Board Decision — Effective 2074/01/14</div>
+        <div class="ppa-new-banner">
+          <div class="icon">🔔</div>
+          <div class="text"><strong>NEA Board PPA Rules (2074/01/14):</strong> Rated capacity of hydropower projects to be eligible for local currency PPA = <strong>any capacity</strong>. Rated capacity eligible for foreign currency PPA = <strong>above 100 MW</strong>. Base rate to be lowered for projects >100MW with ROE higher than 17%.</div>
+        </div>
 
-        <h3 style="font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;font-family:'DM Mono',monospace">Solar PPA</h3>
+        <!-- PPA CALCULATOR -->
+        <div class="r-section">
+          <div class="r-sec-tag">Interactive Module</div>
+          <h2 class="r-sec-title">PPA Revenue &amp; Financial Projections</h2>
+          <div class="calc-card calc-grid-2">
+            <div style="display:flex; flex-direction:column; gap:1.5rem;">
+              <div>
+                <label class="calc-label">Project Type Selection</label>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                  <button class="calc-type-btn active" id="btn-ppa-ror" onclick="setPPAType('ROR')">ROR</button>
+                  <button class="calc-type-btn" id="btn-ppa-pror" onclick="setPPAType('PROR')">PROR</button>
+                  <button class="calc-type-btn" id="btn-ppa-res" onclick="setPPAType('RESERVOIR')">STORAGE</button>
+                  <button class="calc-type-btn" id="btn-ppa-sol" onclick="setPPAType('SOLAR')">SOLAR</button>
+                </div>
+              </div>
+              
+              <div id="pror-hours-container" style="display:none; padding:1rem; background:rgba(15,118,110,0.05); border:1px solid rgba(15,118,110,0.15); border-radius:4px;">
+                <label class="calc-label" style="color:var(--teal)">PROR Peaking Setup (Dry Season)</label>
+                <select id="pror-hours" class="calc-input" onchange="updatePPACalculator()" style="cursor:pointer; margin-bottom:1rem; border-color:rgba(15,118,110,0.3);">
+                  <option value="8.50">1 hr to &lt;2 hrs (Rs. 8.50)</option>
+                  <option value="8.80">2 hrs to &lt;3 hrs (Rs. 8.80)</option>
+                  <option value="9.40">3 hours to &lt;4 hrs (Rs. 9.40)</option>
+                  <option value="10.55" selected>4 hours to 6 hours (Rs. 10.55)</option>
+                </select>
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:.5rem;">
+                  <label class="calc-label" style="margin-bottom:0;">Peak Energy (% of Dry Season)</label>
+                  <span id="ppa-pror-peak-val" style="font-size:0.75rem; font-weight:700; color:var(--teal)">40%</span>
+                </div>
+                <input type="range" id="ppa-pror-peak-percent" class="calc-range" min="0" max="100" value="40" oninput="updatePPACalculator()">
+              </div>
+              
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+                <div><label class="calc-label">Capacity (MW)</label><input type="number" id="ppa-cap" class="calc-input" value="10.00" oninput="updatePPACalculator()"></div>
+                <div><label class="calc-label">Annual Gen. (GWh)</label><input type="number" id="ppa-gen" class="calc-input" value="58.125" oninput="updatePPACalculator()"></div>
+              </div>
+              
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:.5rem;">
+                  <label class="calc-label" style="margin-bottom:0;">Dry Season Energy Partition</label>
+                  <div style="display:flex; align-items:center; gap:0.3rem;">
+                    <input type="number" id="ppa-dry-percent-input" class="calc-input" value="33.86" step="0.01" style="width:70px; padding:0.2rem 0.5rem; text-align:right; font-size:0.8rem; height:auto; color:var(--teal); font-weight:700;" oninput="document.getElementById('ppa-dry-percent').value=this.value; updatePPACalculator()">
+                    <span style="font-size:0.75rem; font-weight:700; color:var(--teal)">%</span>
+                  </div>
+                </div>
+                <input type="range" id="ppa-dry-percent" class="calc-range" min="0" max="100" value="33.86" step="0.01" oninput="document.getElementById('ppa-dry-percent-input').value=this.value; updatePPACalculator()">
+              </div>
+
+              <!-- Extra inputs for parameterization based on PPA Document -->
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; border-top:1px solid var(--border); padding-top:1.25rem; margin-top:1.25rem;">
+                  <div><label class="calc-label" title="Gross Head in meters">Gross Head (m)</label><input type="number" id="ppa-head" class="calc-input" value="176.25" oninput="recalcTech()"></div>
+                  <div><label class="calc-label" title="Design discharge in m³/s">Discharge (m³/s)</label><input type="number" id="ppa-flow" class="calc-input" value="7.00" oninput="recalcTech()"></div>
+                  <div><label class="calc-label" title="Turbine * Generator * Transformer efficiency">Combined Eff. (%)</label><input type="number" id="ppa-eff" class="calc-input" value="85.54" oninput="recalcTech()" step="0.01"></div>
+                  
+                  <div><label class="calc-label" title="Percentage of energy lost due to outage & self-consumption">Outage/Loss (%)</label><input type="number" id="ppa-loss" class="calc-input" value="4.0" oninput="updatePPACalculator()"></div>
+                  <div><label class="calc-label" title="Months of delay from RCOD. Reduces maximum escalations per Clause 12.1">COD Delay (M)</label><input type="number" id="ppa-cod-delay" class="calc-input" value="0" oninput="updatePPACalculator()"></div>
+                  <div><label class="calc-label" title="Percentage of energy shortfall relative to Available Declaration per Clause 10.1">Dev. Penalty (%)</label><input type="number" id="ppa-deviation" class="calc-input" value="0" oninput="updatePPACalculator()" step="0.1"></div>
+                  
+                  <div style="grid-column: span 2;">
+                      <label class="calc-label" title="Compensation Case">Compensation Case</label>
+                      <select id="ppa-comp-case" class="calc-input" onchange="updatePPACalculator()" style="cursor:pointer; padding:0.65rem 0.4rem; font-size:0.8rem">
+                          <option value="case1">Case I: Forced Outage of NEA Line(s)</option>
+                          <option value="case2">Case II: NEA Dispatch Instructions</option>
+                      </select>
+                  </div>
+                  <div><label class="calc-label" title="Undelivered Energy (GWh) due to NEA Outage/Instruction">Undelivered (GWh)</label><input type="number" id="ppa-undelivered" class="calc-input" value="0" step="0.01" oninput="updatePPACalculator()"></div>
+              </div>
+              
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; border-top:1px solid var(--border); padding-top:1.25rem;">
+                <div style="grid-column: span 2"><label class="calc-label">Total Project Cost (Rs. Cr)</label><input type="number" id="ppa-cost" class="calc-input" value="201.61" oninput="updatePPACalculator()"></div>
+                <div><label class="calc-label">Lifespan (Yrs)</label><input type="number" id="ppa-life" class="calc-input" value="30" oninput="updatePPACalculator()"></div>
+                <div><label class="calc-label">Loan Term (Yrs)</label><input type="number" id="ppa-loan" class="calc-input" value="12" oninput="updatePPACalculator()"></div>
+                <div><label class="calc-label">Debt (%)</label><input type="number" id="ppa-debt" class="calc-input" value="70" oninput="updatePPACalculator()"></div>
+                <div><label class="calc-label">Interest Rate (%)</label><input type="number" id="ppa-int" class="calc-input" value="12" oninput="updatePPACalculator()" step="0.1"></div>
+                <div><label class="calc-label">OPEX (% Rev)</label><input type="number" id="ppa-opex" class="calc-input" value="2.5" oninput="updatePPACalculator()" step="0.1"></div>
+                <div>
+                  <label class="calc-label">Rate Escalation</label>
+                  <div style="display:flex; align-items:center; height:100%; font-size:.7rem; color:var(--muted); font-family:'DM Mono',monospace;" id="ppa-esc-info">3% for 8 yrs (Simple)</div>
+                </div>
+              </div>
+              
+              <div style="border-top:1px solid var(--border); padding-top:1.25rem;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:.5rem;">
+                  <label class="calc-label" style="margin-bottom:0;">Analysis Target Year</label>
+                  <span id="ppa-year-val" style="font-size:0.75rem; font-weight:700; color:var(--green-bright)">Year 1</span>
+                </div>
+                <input type="range" id="ppa-year" class="calc-range" min="1" max="30" value="1" oninput="updatePPACalculator()">
+              </div>
+            </div>
+
+            <!-- Right Side Dashboard -->
+            <div style="background:var(--surface2); padding:1.75rem; border-radius:4px; display:flex; flex-direction:column; gap:1.25rem; border:1px solid var(--border);">
+               <div id="ppa-warning-text" style="display:none; background:rgba(192,57,43,0.1); color:var(--red); padding:0.8rem; border-radius:4px; font-size:0.75rem; font-family:'DM Mono',monospace; line-height:1.4; border:1px solid rgba(192,57,43,0.2);"></div>
+               <div>
+                  <div class="calc-res-label">Est. Annual Revenue (Selected Year)</div>
+                  <div class="calc-res-val" id="ppa-res-annual">NPR 0.00 Cr</div>
+               </div>
+               <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; border-top:1px solid rgba(0,0,0,0.05); padding-top:1rem;">
+                  <div><div class="calc-res-label">DSCR</div><div class="calc-res-val" id="ppa-res-dscr" style="font-size:1.8rem">0.00</div></div>
+                  <div><div class="calc-res-label">Free Cash Flow</div><div class="calc-res-val" id="ppa-res-fcf" style="font-size:1.8rem; color:var(--text)">Rs. 0.00 Cr</div></div>
+               </div>
+               <div style="background:var(--bg); border:1px solid var(--border); padding:1rem; border-radius:4px;">
+                  <div style="display:flex; justify-content:space-between; margin-bottom:.75rem;">
+                     <span class="calc-res-label">GoN Royalty Breakdown</span>
+                     <span id="ppa-royalty-phase" style="font-size:0.6rem; background:rgba(15,118,110,0.1); color:var(--teal); padding:0.15rem 0.4rem; border-radius:2px; font-weight:700;">Y1-15 Phase</span>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; font-size:.8rem; margin-bottom:.4rem;"><span style="color:var(--muted)">Capacity Royalty</span><strong id="ppa-res-royalty-cap" style="color:var(--text)">0</strong></div>
+                  <div style="display:flex; justify-content:space-between; font-size:.8rem; margin-bottom:.6rem;"><span style="color:var(--muted)">Energy Royalty</span><strong id="ppa-res-royalty-eng" style="color:var(--text)">0</strong></div>
+                  <div style="display:flex; justify-content:space-between; font-size:.85rem; border-top:1px dashed var(--border); padding-top:.6rem;"><strong style="color:var(--teal)">Total Est. Royalty</strong><strong id="ppa-res-royalty-tot" style="color:var(--teal)">0</strong></div>
+               </div>
+               <div style="font-size:.7rem; font-family:'DM Mono',monospace; color:var(--muted); text-transform:uppercase;">OPEX Estimated: <strong id="ppa-res-opex" style="color:var(--text)">0</strong></div>
+               <div style="border-top:1px solid rgba(0,0,0,0.05); padding-top:1.25rem;">
+                  <div class="calc-res-label">Est. Lifecycle Revenue (All Years)</div>
+                  <div class="calc-res-val" id="ppa-res-lc" style="font-size:1.6rem; color:var(--text); opacity:0.8;">NPR 0.00 Cr</div>
+               </div>
+               <div style="display:grid; grid-template-columns:1fr; gap:0.75rem; border-top:1px solid rgba(0,0,0,0.05); padding-top:1.25rem;">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                     <div><div class="calc-res-label">Dry Revenue Component</div><div style="font-size:1.1rem; font-weight:700; color:var(--teal);" id="ppa-res-dry-rev">0</div></div>
+                     <div style="text-align:right; font-size:.7rem; color:var(--muted); font-family:'DM Mono',monospace;" id="ppa-res-dry-det">0</div>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                     <div><div class="calc-res-label">Wet Revenue Component</div><div style="font-size:1.1rem; font-weight:700; color:var(--text);" id="ppa-res-wet-rev">0</div></div>
+                     <div style="text-align:right; font-size:.7rem; color:var(--muted); font-family:'DM Mono',monospace;" id="ppa-res-wet-det">0</div>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.75rem; padding-top:0.75rem; border-top: 1px dashed var(--border);">
+                       <div><div class="calc-res-label">NEA Compensation</div><div style="font-size:1.1rem; font-weight:700; color:var(--green-bright);" id="ppa-res-comp">0</div></div>
+                       <div style="text-align:right;"><div class="calc-res-label">Deviation Penalty</div><div style="font-size:1.1rem; font-weight:700; color:var(--red);" id="ppa-res-pen">0</div></div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="r-section" style="margin-top: 3.5rem;">
+          <div class="r-sec-tag">Official Document Extracts</div>
+          <h2 class="r-sec-title">PPA Agreement Clauses & Schedules</h2>
+          <p class="r-intro">Verified provisions from standard Nepal Electricity Authority (NEA) Power Purchase Agreements (PPA). Preserved in both English translation and original Nepali text.</p>
+          
+          <div class="env-cards" style="grid-template-columns: 1fr; gap: 2rem;">
+             <div class="env-card">
+               <h4>📑 Clause 12: Electricity Purchase Rate (विद्युत खरिद मूल्यदर)</h4>
+               <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+                 <div style="background:var(--surface2); padding:1.25rem; border-radius:4px;">
+                   <strong style="color:var(--gold); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">Nepali (Original)</strong>
+                   <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7;">
+                     १२.१ प्राधिकरणले व्यापारिक उत्पादन शुरु हुने मितिदेखि हरेक महिना कम्पनीले आयोजनाबाट उत्पादन गरी उपलब्ध गराएको कन्ट्रयाक्ट इनर्जीको परिमाणसम्मको उर्जा वापत निम्नानुसारको खरिद दरले हुन आउने रकम कम्पनी... बुझाउने छ ।<br><br>
+                     व्यापारिक उत्पादन शुरु हुने मिति (Commercial Operation Date) बाट एक वर्ष पुगेको महिनाको लगत्तै पछिको महिनादेखि लागु हुनेगरि प्रत्येक वर्षको लागि ३ (तीन) प्रतिशतका दरले ८ (आठ) पटकसम्म साधारण मूल्यवृद्धि दिई निम्न तालिका अनुसार विद्युत उर्जा खरिद दर कायम गरिएको छ ।<br><br>
+                     सुख्खायाम (मंसिर १६ देखि जेठ १५ सम्म): रु. ८।४० प्रति युनिट<br>
+                     वर्षायाम (जेठ १६ देखि मंसिर १५ सम्म): रु. ४।८० प्रति युनिट<br><br>
+                     RCOD को तुलनामा COD ढिलो हुन गएमा जम्मा मूल्यवृद्धि:<br>
+                     (क) ६ देखि १८ महिनासम्म ढिलो भएमा: जम्मा ७ वटा<br>
+                     (ख) १८ देखि ३० महिनासम्म ढिलो भएमा: जम्मा ६ वटा<br>
+                     (ग) ३० देखि ४२ महिनासम्म ढिलो भएमा: जम्मा ५ वटा<br>
+                     (घ) ४२ देखि ५४ महिनासम्म ढिलो भएमा: जम्मा ४ वटा<br>
+                     (ङ) ५४ महिनाभन्दा बढी ढिलो भएमा: जम्मा ३ वटा
+                   </p>
+                 </div>
+                 <div style="background:rgba(56,178,172,0.05); border:1px solid rgba(56,178,172,0.2); padding:1.25rem; border-radius:4px;">
+                   <strong style="color:var(--teal); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">English (Translation)</strong>
+                   <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7; color:var(--light);">
+                     12.1 NEA shall pay the Company the amount calculated at the following purchase rates for the energy supplied up to the Contract Energy quantum from the Commercial Operation Date...<br><br>
+                     A simple price escalation of 3 (three) percent per year for up to 8 (eight) times will be provided, effective from the month immediately following the completion of one year from the Commercial Operation Date (COD).<br><br>
+                     Dry Season (Mangsir 16 to Jestha 15): Rs. 8.40 per unit<br>
+                     Wet Season (Jestha 16 to Mangsir 15): Rs. 4.80 per unit<br><br>
+                     If COD is delayed compared to the Required Commercial Operation Date (RCOD), escalations shall be reduced as follows:<br>
+                     (a) Delayed by >6 to 18 months: Max 7 escalations<br>
+                     (b) Delayed by >18 to 30 months: Max 6 escalations<br>
+                     (c) Delayed by >30 to 42 months: Max 5 escalations<br>
+                     (d) Delayed by >42 to 54 months: Max 4 escalations<br>
+                     (e) Delayed by >54 months: Max 3 escalations
+                   </p>
+                 </div>
+               </div>
+             </div>
+
+             <div class="env-card">
+               <h4>⚠️ Clause 10: Deviation Penalty & Compensation (पूर्वानूमान विचलन शुल्क र क्षतिपूर्ति)</h4>
+               <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+                 <div style="background:var(--surface2); padding:1.25rem; border-radius:4px;">
+                   <strong style="color:var(--gold); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">Nepali (Original)</strong>
+                   <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7;">
+                     विचलन शुल्क रु. = ०.१ *[०.९ * कम्पनीबाट प्राधिकरणलाई आपूर्ति हुनु पर्ने बढीमा कन्ट्रयाक्ट इनर्जी सम्मको Availability Declaration अनुसारको मासिक विद्युत उर्जा - सोही महिनामा कम्पनीले उपलब्ध गराएको उर्जा - सोही अवधिमा प्राधिकरणको कारणले वा Scheduled Outage वा काबू बाहिरको परिस्थितिको कारणले आयोजनाबाट उपलब्ध हुन नसकेको उर्जा] * सो महिनाको विद्युत खरिद दर;
+                   </p>
+                 </div>
+                 <div style="background:rgba(56,178,172,0.05); border:1px solid rgba(56,178,172,0.2); padding:1.25rem; border-radius:4px;">
+                   <strong style="color:var(--teal); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">English (Translation)</strong>
+                   <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7; color:var(--light);">
+                     Deviation Penalty (Rs.) = 0.1 *[0.9 * Monthly energy declared (up to Contract Energy) - Energy actually supplied - Energy undelivered due to NEA/Force Majeure/Scheduled Outage] * Purchase Price for that month;
+                   </p>
+                 </div>
+               </div>
+             </div>
+
+             <div class="env-card">
+               <h4>📖 Article 1: Key Technical Definitions (प्राविधिक परिभाषाहरु)</h4>
+               <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+                 <div style="background:var(--surface2); padding:1.25rem; border-radius:4px;">
+                   <strong style="color:var(--gold); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">Nepali (Original)</strong>
+                   <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7;">
+                     <strong>डेलिभरी प्वाइन्ट (Delivery Point):</strong> आयोजनाबाट उत्पादन हुने विद्युत शक्ति प्राधिकरणलाई उपलब्ध गराउने विन्दु (सबस्टेशनको बसबार)।<br><br>
+                     <strong>व्यापारिक उत्पादन शुरु हुने मिति (COD):</strong> आयोजनाबाट प्रथम पटक उत्पादन गरी १५ दिनको सन्तोषजनक परीक्षण उत्पादन (Test Generation) सम्पन्न भएको मिति।<br><br>
+                     <strong>फोर्स आउटेज (Forced Outage):</strong> प्राधिकरणको विद्युत प्रणालीमा ट्रिपिङ्ग वा गडबडी भई विद्युत लिन नसकेको अवस्था (काबू बाहिरको परिस्थिति बाहेक)।<br><br>
+                     <strong>प्रसारण सुविधाहरु (Interconnection Facilities):</strong> विद्युत केन्द्रदेखि डेलिभरी प्वाइन्टसम्मको प्रसारण लाइन, स्वीचयार्ड, मिटरिङ्ग प्रणाली आदि।
+                   </p>
+                 </div>
+                 <div style="background:rgba(56,178,172,0.05); border:1px solid rgba(56,178,172,0.2); padding:1.25rem; border-radius:4px;">
+                   <strong style="color:var(--teal); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">English (Translation)</strong>
+                   <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7; color:var(--light);">
+                     <strong>Delivery Point:</strong> The designated NEA substation busbar where the generated electricity is handed over.<br><br>
+                     <strong>Commercial Operation Date (COD):</strong> The date commercial generation commences following a successful 15-day continuous test generation period.<br><br>
+                     <strong>Forced Outage:</strong> An unexpected interruption in power evacuation caused by NEA grid faults, tripping, or system failures (excluding Force Majeure conditions).<br><br>
+                     <strong>Prudent Utility Practices:</strong> Internationally accepted engineering and utility standards for hydropower operation, design, and maintenance.
+                   </p>
+                 </div>
+               </div>
+             </div>
+
+             <div class="env-card" style="grid-column: span 1;">
+               <h4>🗓️ Schedule 2: Contract Energy</h4>
+               <div style="background:var(--surface2); padding:1.25rem; border-radius:4px; margin-top:1rem;">
+                 <p style="font-size:0.85rem; line-height:1.7; color:var(--light);">
+                   Contract Energy is declared via the Availability Declaration. For ROR projects, the minimum dry season energy must be 30% to avoid financial penalties. The table defines the monthly dispatched energy (kWh) distributed across Dry (Mangsir 16 to Jestha 15) and Wet (Jestha 16 to Mangsir 15) seasons.
+                 </p>
+               </div>
+             </div>
+
+             <div class="env-card" style="grid-column: span 1;">
+               <h4>💰 Schedule 3: Compensation Formula (Case I & Case II)</h4>
+               <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+                 <div style="background:rgba(56,178,172,0.05); border:1px solid rgba(56,178,172,0.2); padding:1.25rem; border-radius:4px;">
+                   <strong style="color:var(--teal); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">Case I: Forced Outage of NEA Line(s)</strong>
+                   <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7; color:var(--light);">
+                     Applies when grid faults prevent the Project from generating/delivering according to Available Capacity.<br><br>
+                     <strong>UE = ∑ (UC_i × PT_i)</strong><br><br>
+                     <strong>UC_i</strong> (Undelivered Capacity) = Available Capacity - Capacity Delivered (0 if negative).<br>
+                     <strong>PT_i</strong> (Prorated Time) = [UC_i / Monthly Capacity]* × Forced Outage Hours.<br><br>
+                     <em>*Applicable only to the extent that (Metered Energy + UE) is equal to or less than 80% of the smaller of Contract Energy and Availability Declaration for the Month.</em>
+                   </p>
+                 </div>
+                 <div style="background:rgba(200,169,110,0.05); border:1px solid rgba(200,169,110,0.2); padding:1.25rem; border-radius:4px;">
+                   <strong style="color:var(--gold); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; font-family:'DM Mono',monospace;">Case II: NEA Dispatch Instructions</strong>
+                   <p style="font-size:0.85rem; margin-top:0.75rem; line-height:1.7; color:var(--light);">
+                     Applies when NEA instructs the Project to generate less than the Available Capacity.<br><br>
+                     <strong>UE = ∑ (UC_i × PT_i)</strong><br><br>
+                     <strong>UC_i</strong> = Available Capacity - (the greater of Capacity Dispatched and Capacity Delivered).<br>
+                     <strong>PT_i</strong> = [UC_i / Monthly Capacity]* × Nondispatched Hours.<br><br>
+                     <strong style="color:var(--red);">Zero Compensation Exceptions:</strong><br>
+                     Compensation = 0 if cumulative PT ≤ <strong>72 hours</strong> in the Fiscal Year, OR if dispatched & delivered energy ≥ 100% of the smaller of Contract Energy and Availability Declaration.
+                   </p>
+                 </div>
+               </div>
+             </div>
+          </div>
+        </div>
+
+        <h3 style="font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;font-family:'DM Mono',monospace;margin-top:2.5rem;">ROR Rates — Up to 100 MW</h3>
         <div class="tscroll"><table>
-          <tr><th>Parameter</th><th>Detail</th></tr>
-          <tr><td>Maximum base tariff ceiling</td><td class="rate">NPR 5.94 / unit</td></tr>
-          <tr><td>PPA duration</td><td>25 years (fixed rate)</td></tr>
-          <tr><td>Construction (&lt;10 MW)</td><td>18 months from PPA date</td></tr>
-          <tr><td>Construction (&gt;10 MW)</td><td>24 months from PPA date</td></tr>
+          <tr><th>Option</th><th>Season</th><th>Period</th><th>Rate (Rs./kWh)</th><th>Min. Dry Energy</th></tr>
+          <tr><td rowspan="2" style="border-right:1px solid var(--border)"><strong>Option 1</strong><br><span style="font-size:0.65rem; color:var(--muted); font-weight:normal;">(6 months each)</span></td><td>Wet</td><td>Jestha 16 – Mangsir 15</td><td class="rate">4.80</td><td rowspan="2">30%</td></tr>
+          <tr><td>Dry</td><td>Mangsir 16 – Jestha 15</td><td class="rate">8.40</td></tr>
+          <tr><td rowspan="2" style="border-right:1px solid var(--border)"><strong>Option 2</strong><br><span style="font-size:0.65rem; color:var(--muted); font-weight:normal;">(4 Dry / 8 Wet)</span></td><td>Wet</td><td>Baisakh – Mangsir</td><td class="rate">4.80</td><td rowspan="2">15%</td></tr>
+          <tr><td>Dry</td><td>Poush – Chaitra</td><td class="rate">8.40</td></tr>
         </table></div>
+        <div class="table-note"><strong>Note:</strong> Posted rate with 3% simple escalations for 8 years for capacity up to 100 MW. Base rate to be lowered for projects above 100 MW with ROE higher than 17%.</div>
+
+        <h3 style="font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;font-family:'DM Mono',monospace">PROR Rates — Peaking Run of River</h3>
+        <div class="tscroll"><table>
+          <tr><th>Season</th><th>Time of Day</th><th>Daily Hours required to generate at rated capacity</th><th>Rate (Rs./kWh)</th><th>Min. Dry Energy</th></tr>
+          <tr><td rowspan="5" style="border-right:1px solid var(--border)">Dry<br><span style="font-size:0.7rem; color:var(--muted)">(Mangsir 16 - Jestha 15)</span></td><td rowspan="4" style="border-right:1px solid var(--border)">Peak hours</td><td>1 hr to &lt;2 hrs</td><td class="rate">8.50</td><td rowspan="5">30%</td></tr>
+          <tr><td>2 hrs to &lt;3 hrs</td><td class="rate">8.80</td></tr>
+          <tr><td>3 hrs to &lt;4 hrs</td><td class="rate">9.40</td></tr>
+          <tr><td>4 hrs to 6 hrs</td><td class="rate-hi">10.55</td></tr>
+          <tr><td style="border-right:1px solid var(--border)">Non-peak hours</td><td>All other hours</td><td class="rate">8.40</td></tr>
+          <tr><td style="border-right:1px solid var(--border)">Wet<br><span style="font-size:0.7rem; color:var(--muted)">(Jestha 16 - Mangsir 15)</span></td><td style="border-right:1px solid var(--border)">All hours</td><td>-</td><td class="rate">4.80</td><td>-</td></tr>
+        </table></div>
+
+        <h3 style="font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;font-family:'DM Mono',monospace">STORAGE PROJECT RATES</h3>
+        <div class="tscroll"><table>
+          <tr><th>Season</th><th>Period</th><th>Rate (Rs./kWh)</th><th>Min. Dry Energy</th></tr>
+          <tr><td>Dry</td><td>Mangsir 16 – Jestha 15</td><td class="rate-hi">12.40</td><td>35%</td></tr>
+          <tr><td>Wet</td><td>Jestha 16 – Mangsir 15</td><td class="rate">7.10*</td><td>-</td></tr>
+        </table></div>
+        <div class="table-note"><strong>Storage Rules:</strong> 3% simple escalations for 8 years. If dry season energy is less than 35% of annual energy, treated as PROR.</div>
       </div>
       <div class="panel-footer"><span>Source: NEA Board Decisions 2074/01/14</span><a href="https://nea.org.np" target="_blank">nea.org.np ↗</a></div>
     </div>
+
 
     <!-- DOED PANEL -->
     <div class="panel" id="panel-doed">
@@ -1600,19 +1882,12 @@ function setPPAType(type) {
   document.getElementById('btn-ppa-pror').classList.toggle('active', type === 'PROR');
   document.getElementById('btn-ppa-res').classList.toggle('active', type === 'RESERVOIR');
   document.getElementById('btn-ppa-sol').classList.toggle('active', type === 'SOLAR');
-  
   const rates = PPA_RATES_MAP[type];
-  document.getElementById('ppa-esc-info').innerText = rates.esc > 0 ? `3% p.a. for ${rates.esc} yrs (Simple)` : 'Fixed (No Escalation)';
-  
+  document.getElementById('ppa-esc-info').innerText = rates.esc > 0 ? `3% p.a. for ${rates.esc} yrs` : 'Fixed';
   document.getElementById('pror-hours-container').style.display = type === 'PROR' ? 'block' : 'none';
-  
-  const dryInput = document.getElementById('ppa-dry-percent');
-  if(type === 'SOLAR') {
-    dryInput.value = 100;
-    dryInput.disabled = true;
-  } else {
-    dryInput.disabled = false;
-  }
+  const dryInput = document.getElementById('ppa-dry-percent'), dryNumInput = document.getElementById('ppa-dry-percent-input');
+  if(type === 'SOLAR') { dryInput.value = 100; dryNumInput.value = 100; dryInput.disabled = true; dryNumInput.disabled = true; } 
+  else { dryInput.disabled = false; dryNumInput.disabled = false; }
   updatePPACalculator();
 }
 
@@ -1620,27 +1895,21 @@ function recalcTech() {
   const head = parseFloat(document.getElementById('ppa-head').value) || 0;
   const flow = parseFloat(document.getElementById('ppa-flow').value) || 0;
   const eff = parseFloat(document.getElementById('ppa-eff').value) || 0;
-
-  // Capacity calculation from Head and Flow: P(kW) = 9.81 * Q * H * Eff
-  const capkW = 9.81 * flow * head * (eff / 100);
-  const capMW = capkW / 1000;
+  const capMW = (9.81 * flow * head * (eff / 100)) / 1000;
   document.getElementById('ppa-cap').value = capMW.toFixed(2);
-
   updatePPACalculator();
 }
 
 function updatePPACalculator() {
   const capInput = document.getElementById('ppa-cap');
   if(!capInput) return;
-
   const cap = parseFloat(capInput.value) || 0;
   const gen = parseFloat(document.getElementById('ppa-gen').value) || 0;
   const loss = parseFloat(document.getElementById('ppa-loss').value) || 0;
-  const netGen = gen * (1 - (loss/100)); // Apply internal losses/outages
+  const netGen = gen * (1 - (loss/100));
 
-  const dryPct = currentPPAType === 'SOLAR' ? 100 : (parseFloat(document.getElementById('ppa-dry-percent').value) || 0);
+  const dryPct = currentPPAType === 'SOLAR' ? 100 : (parseFloat(document.getElementById('ppa-dry-percent-input').value) || 0);
   const wetPct = 100 - dryPct;
-  document.getElementById('ppa-dry-val').innerText = dryPct + '%';
 
   const cost = parseFloat(document.getElementById('ppa-cost').value) || 0;
   const lifespan = parseFloat(document.getElementById('ppa-life').value) || 30;
@@ -1649,7 +1918,8 @@ function updatePPACalculator() {
   const interestRate = parseFloat(document.getElementById('ppa-int').value) || 0;
   const opexPct = parseFloat(document.getElementById('ppa-opex').value) || 0;
   const codDelay = parseFloat(document.getElementById('ppa-cod-delay').value) || 0;
-  const neaOutage = parseFloat(document.getElementById('ppa-nea-outage').value) || 0;
+  const compCase = document.getElementById('ppa-comp-case').value;
+  const undeliveredGWh = parseFloat(document.getElementById('ppa-undelivered').value) || 0;
   const devPenaltyPct = parseFloat(document.getElementById('ppa-deviation').value) || 0;
 
   const opYearInput = document.getElementById('ppa-year');
@@ -1661,7 +1931,6 @@ function updatePPACalculator() {
   const rates = PPA_RATES_MAP[currentPPAType];
   const escRate = rates.esc > 0 ? 3 : 0;
   
-  // Clause 12.1 Rules: Reduce allowed escalations if COD is delayed
   let actualMaxEsc = rates.esc;
   if (codDelay > 6 && codDelay <= 18) actualMaxEsc = 7;
   else if (codDelay > 18 && codDelay <= 30) actualMaxEsc = 6;
@@ -1669,13 +1938,8 @@ function updatePPACalculator() {
   else if (codDelay > 42 && codDelay <= 54) actualMaxEsc = 4;
   else if (codDelay > 54) actualMaxEsc = 3;
 
-  let baseDryRate = 0;
-  let baseWetRate = 0;
-  let warningText = "";
-
-  if (codDelay > 6) {
-    warningText += `⚠️ COD Delayed by ${codDelay} months. Max allowed escalations reduced to ${actualMaxEsc}. `;
-  }
+  let baseDryRate = 0, baseWetRate = 0, warningText = "";
+  if (codDelay > 6) warningText += `⚠️ COD Delayed. Max allowed escalations reduced to ${actualMaxEsc}. `;
 
   if (currentPPAType === 'PROR') {
       const peakRate = parseFloat(document.getElementById('pror-hours').value) || 10.55;
@@ -1683,21 +1947,21 @@ function updatePPACalculator() {
       document.getElementById('ppa-pror-peak-val').innerText = peakEnergyPct + '%';
       baseDryRate = (peakEnergyPct / 100) * peakRate + ((100 - peakEnergyPct) / 100) * 8.40;
       baseWetRate = 4.80;
-      if (dryPct < 30) warningText += "⚠️ Warning: Dry energy < 30%. Financial penalties apply per PPA rules.";
+      if (dryPct < 30) warningText += "⚠️ Dry energy < 30%. Penalties apply.";
   } else if (currentPPAType === 'RESERVOIR') {
       baseDryRate = 12.40;
       if (wetPct > 50) {
           const excess = wetPct - 50;
           baseWetRate = 7.10 * (1 - (excess / 100));
-          warningText += `ℹ️ Wet energy > 50% (${wetPct.toFixed(2)}%). Wet rate reduced by excess ${excess.toFixed(2)}%. `;
+          warningText += `ℹ️ Wet energy > 50%. Wet rate reduced by excess ${excess.toFixed(2)}%. `;
       } else {
           baseWetRate = 7.10;
       }
-      if (dryPct < 35) warningText += "⚠️ Warning: Storage dry energy < 35%. Project will be treated as PROR.";
+      if (dryPct < 35) warningText += "⚠️ Storage dry energy < 35%. Treated as PROR.";
   } else if (currentPPAType === 'ROR') {
       baseDryRate = 8.40;
       baseWetRate = 4.80;
-      if (dryPct < 30) warningText += "⚠️ Warning: Dry energy < 30%. Financial penalties apply per PPA rules.";
+      if (dryPct < 30) warningText += "⚠️ Dry energy < 30%. Penalties apply.";
   } else if (currentPPAType === 'SOLAR') {
       baseDryRate = 5.94;
       baseWetRate = 5.94;
@@ -1705,17 +1969,12 @@ function updatePPACalculator() {
 
   const warningEl = document.getElementById('ppa-warning-text');
   if (warningEl) {
-      if(warningText.trim()) {
-          warningEl.innerText = warningText;
-          warningEl.style.display = 'block';
-      } else {
-          warningEl.style.display = 'none';
-      }
+      if(warningText.trim()) { warningEl.innerText = warningText; warningEl.style.display = 'block'; } 
+      else { warningEl.style.display = 'none'; }
   }
 
   const dryEnergy = (netGen * dryPct) / 100;
   const wetEnergy = netGen - dryEnergy;
-
   const steps = Math.min(opYear - 1, actualMaxEsc);
   const mult = 1 + (escRate / 100) * steps;
 
@@ -1725,19 +1984,14 @@ function updatePPACalculator() {
   const dryRev = dryEnergy * 1000000 * currentDryRate;
   const wetRev = wetEnergy * 1000000 * currentWetRate;
   
-  // Schedule 3 Compensation Calculation (NEA forced outage hours)
-  const compDry = (neaOutage / 8760) * dryEnergy * 1000000 * currentDryRate;
-  const compWet = (neaOutage / 8760) * wetEnergy * 1000000 * currentWetRate;
+  // Both Case I & II apply this pricing structurally based on Undelivered GWh Input
+  const compDry = undeliveredGWh * (dryPct / 100) * 1000000 * currentDryRate;
+  const compWet = undeliveredGWh * (wetPct / 100) * 1000000 * currentWetRate;
   const totalComp = compDry + compWet;
 
-  // Clause 10 Deviation Penalty
-  // Penalty = 0.1 *[0.9 * Contract Energy - Supplied] * Price
-  // We approximate the supplied vs contracted using the user's deviation percentage
   const deviationPenalty = (devPenaltyPct / 100) * (dryRev + wetRev) * 0.1 * 0.9;
-
   const annualRev = dryRev + wetRev + totalComp - deviationPenalty;
 
-  // Royalty Calculation
   const capRoyaltyRate = opYear <= 15 ? 100 : 1000;
   const engRoyaltyPct = opYear <= 15 ? 1.85 : 10.0;
   const capRoyalty = cap * 1000 * capRoyaltyRate;
@@ -1745,13 +1999,10 @@ function updatePPACalculator() {
   const totalRoyalty = capRoyalty + engRoyalty;
 
   document.getElementById('ppa-royalty-phase').innerText = opYear <= 15 ? 'Y1-15 Phase' : 'Post-15 Phase';
-  document.getElementById('ppa-royalty-phase').style.color = opYear <= 15 ? 'var(--teal)' : 'var(--gold)';
-  document.getElementById('ppa-royalty-phase').style.background = opYear <= 15 ? 'rgba(15,118,110,0.1)' : 'rgba(138,106,46,0.1)';
-
+  
   const opex = annualRev * (opexPct / 100);
   const ebitda = annualRev - totalRoyalty - opex;
 
-  // Debt Service
   const principal = cost * 10000000 * (debtRatio / 100);
   const annualRate = interestRate / 100;
   let ds = 0;
@@ -1763,43 +2014,30 @@ function updatePPACalculator() {
   const dscr = ds > 0 ? ebitda / ds : 0;
   const fcf = ebitda - ds;
 
-  // Lifecycle
   let lcTotal = 0;
-  const annualDryBase = dryEnergy * 1000000 * baseDryRate;
-  const annualWetBase = wetEnergy * 1000000 * baseWetRate;
-  const baseRev = annualDryBase + annualWetBase;
-  
+  const baseRev = (dryEnergy * 1000000 * baseDryRate) + (wetEnergy * 1000000 * baseWetRate);
   for (let y = 1; y <= lifespan; y++) {
     const s = Math.min(y - 1, actualMaxEsc);
-    const m = 1 + (escRate / 100) * s;
-    lcTotal += baseRev * m;
+    lcTotal += baseRev * (1 + (escRate / 100) * s);
   }
 
-  // Update UI Elements
   document.getElementById('ppa-res-annual').innerText = 'NPR ' + (annualRev / 10000000).toLocaleString(undefined, {maximumFractionDigits:2}) + ' Cr';
-  
   const dscrEl = document.getElementById('ppa-res-dscr');
   dscrEl.innerText = ds > 0 ? dscr.toFixed(2) : (opYear > loanTerm ? 'N/A' : '0.00');
   dscrEl.className = 'calc-res-val ' + (dscr >= 1.2 ? 'green' : (dscr > 0 ? 'gold' : ''));
-  
   document.getElementById('ppa-res-fcf').innerText = 'Rs. ' + (fcf / 10000000).toFixed(2) + ' Cr';
-  
   document.getElementById('ppa-res-royalty-cap').innerText = 'Rs. ' + (capRoyalty / 10000000).toFixed(3) + ' Cr';
   document.getElementById('ppa-res-royalty-eng').innerText = 'Rs. ' + (engRoyalty / 10000000).toFixed(3) + ' Cr';
   document.getElementById('ppa-res-royalty-tot').innerText = 'Rs. ' + (totalRoyalty / 10000000).toFixed(2) + ' Cr';
-  
   document.getElementById('ppa-res-opex').innerText = 'Rs. ' + (opex / 10000000).toFixed(2) + ' Cr';
   document.getElementById('ppa-res-lc').innerText = 'NPR ' + (lcTotal / 10000000).toLocaleString(undefined, {maximumFractionDigits:2}) + ' Cr';
-
   document.getElementById('ppa-res-dry-rev').innerText = 'Rs. ' + (dryRev / 10000000).toFixed(2) + ' Cr';
   document.getElementById('ppa-res-wet-rev').innerText = 'Rs. ' + (wetRev / 10000000).toFixed(2) + ' Cr';
   document.getElementById('ppa-res-dry-det').innerText = dryEnergy.toFixed(2) + ' GWh @ ' + currentDryRate.toFixed(2);
   document.getElementById('ppa-res-wet-det').innerText = wetEnergy.toFixed(2) + ' GWh @ ' + currentWetRate.toFixed(2);
-  
   document.getElementById('ppa-res-comp').innerText = 'Rs. ' + (totalComp / 10000000).toFixed(2) + ' Cr';
   document.getElementById('ppa-res-pen').innerText = 'Rs. ' + (deviationPenalty / 10000000).toFixed(2) + ' Cr';
 }
-
 
 /* ══════════════════════════════════════════════
    NEA LIVE DATA
